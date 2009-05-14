@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 require 'rubygems'
 require 'icalendar'
 require 'fileutils'
@@ -14,8 +13,8 @@ today = Date.today
 date_end = today + 365 * 3
 
 HOME = ENV['HOME']
-SETTING = "#{HOME}/.icalrc"
-CACHEDIR = "#{HOME}/.ical.d/cache"
+SETTING = "#{HOME}/.ricalrc"
+CACHEDIR = "#{HOME}/.rical.d/cache"
 unless File.exists?(SETTING)
   puts "no #{SETTING}"
   exit 1
@@ -23,6 +22,7 @@ end
 icss = File.open(SETTING) { |f| f.readlines.map(&:chop) }
 icss = icss.map { |fn|
   case fn
+  when /\A\z/
   when /^#/
     nil
   when /^\//

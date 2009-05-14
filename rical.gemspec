@@ -9,9 +9,10 @@ Gem::Specification.new do |s|
   s.date = %q{2009-05-14}
   s.description = %q{iCalendar viewer for Ruby.}
   s.email = %q{ohachige@gmail.com}
-  s.files = ["README", "lib/rical.rb"]
+  s.files = ["README", "lib/rical.rb", "bin/rical"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/ohac/rical}
+  s.executables = ["rical"]
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{rical}
