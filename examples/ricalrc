@@ -1,0 +1,11 @@
+# save this file as ~/.ricalrc
+
+# relative path (base: $HOME)
+icals/2009.ics
+
+# absolute path
+/home/ohac/icals/foo.ics
+
+# HTTP (need wget for now)
+http://www.google.com/calendar/ical/japanese__ja%40holiday.calendar.google.com/public/basic.ics
+http://weather.livedoor.com/forecast/ical/27/81.ics
