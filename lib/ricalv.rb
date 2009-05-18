@@ -137,5 +137,10 @@ items = items.select{|v|
   d = v[:d]
   d.year == today.year && d.month == today.month
 }
-items = items.map{|v| "#{v[:d].to_s}(#{WEEKTOSTR[v[:d].wday]}) #{v[:t] || v[:e].summary}"}
+keys = items.map{|v| v[:d]}.uniq
+items = keys.inject({}){|h,v| h[v] = items.select{|x| x[:d] == v}; h}
+items = items.map{|k,v|
+  s = v.map{|x| x[:t] || x[:e].summary}.join(', ')
+  "#{k}(#{WEEKTOSTR[k.wday]}) #{s}"
+}
 items.sort.each{|v| puts v}
