@@ -24,6 +24,13 @@ module Icalendar
 
 end
 
+# for ruby1.8
+unless Date.method_defined?(:next_year)
+class Date
+  def next_year(n=1) self >> n * 12 end
+end
+end
+
 WEEKTABLE = { 'SU' => 7, 'MO' => 1, 'TU' => 2,
               'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6 }
 KEYS = [ 'FREQ', 'BYDAY', 'BYMONTH', 'WKST', 'UNTIL', 'INTERVAL' ]
@@ -106,7 +113,7 @@ items = calss.map { |cals|
           end
         end
         if yearly
-          d = d.next_year # TODO for ruby1.9
+          d = d.next_year
           d = Date.new(d.year, mon, 1) if mon
           while d <= ud
             if day
