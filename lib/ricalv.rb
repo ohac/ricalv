@@ -13,8 +13,8 @@ today = Date.today
 date_end = today + 365 * 3
 
 HOME = ENV['HOME']
-SETTING = "#{HOME}/.ricalrc"
-CACHEDIR = "#{HOME}/.rical.d/cache"
+SETTING = "#{HOME}/.ricalvrc"
+CACHEDIR = "#{HOME}/.ricalv.d/cache"
 unless File.exists?(SETTING)
   puts "no #{SETTING}"
   exit 1
