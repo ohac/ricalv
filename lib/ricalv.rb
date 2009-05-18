@@ -3,6 +3,27 @@ require 'icalendar'
 require 'fileutils'
 require 'digest'
 
+# FIXME monkey patch for icalendar 1.1.0
+module Icalendar
+
+  class RRule
+
+    def to_ical
+      result = ["FREQ=#{@frequency}"]
+      result << ";UNTIL=#{@until.to_ical}" if @until
+      result << ";COUNT=#{@count}" if @count
+      result << ";INTERVAL=#{@interval}" if @interval
+      @by_list.each do |key, value|
+        result << ";#{key.to_s.upcase}=#{value[0]}" if value
+      end
+      result << ";WKST=#{@wkst}" if @wkst
+      result.join
+    end
+
+  end
+
+end
+
 WEEKTABLE = { 'SU' => 7, 'MO' => 1, 'TU' => 2,
               'WE' => 3, 'TH' => 4, 'FR' => 5, 'SA' => 6 }
 KEYS = [ 'FREQ', 'BYDAY', 'BYMONTH', 'WKST', 'UNTIL', 'INTERVAL' ]
@@ -50,7 +71,8 @@ items = calss.map { |cals|
       rrule = event.properties["rrule"]
       if rrule
         rulehash = {}
-        rule = rrule[0].split(";")
+        rule = rrule[0].to_ical # TODO for icalendar 1.1.0
+        rule = rule.split(";")
         rule.each do |item|
           a, b = item.split("=")
           rulehash[a] = b
@@ -84,7 +106,7 @@ items = calss.map { |cals|
           end
         end
         if yearly
-          d = d.next_year
+          d = d.next_year # TODO for ruby1.9
           d = Date.new(d.year, mon, 1) if mon
           while d <= ud
             if day
