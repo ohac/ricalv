@@ -62,7 +62,8 @@ icss = icss.map { |fn|
   when /http:\/\//
     FileUtils.mkdir_p(CACHEDIR)
     d = CACHEDIR + '/' + Digest::MD5.hexdigest(fn)
-    `wget -q -O #{d} #{fn}`
+    expire = File.exist?(d) && (File.mtime(d).to_i + 10 * 60) # 10 min
+    `wget -q -O #{d} #{fn}` if !expire || Time.now.to_i > expire
     d
   else
     HOME + '/' + fn
@@ -73,7 +74,7 @@ calss = icss.map { |fn|
   File.open(fn) { |f| Icalendar.parse(f) }
 }
 
-colors = [ '33', '35', '36', '37' ] * 10 # TODO
+colors = [ '31', '32', '33', '35', '36', '37' ] * 10 # TODO
 items = calss.map { |cals|
   color = colors.shift
   cals.map { |cal|
