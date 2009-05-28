@@ -2,6 +2,25 @@ require 'rubygems'
 require 'icalendar'
 require 'fileutils'
 require 'digest'
+require 'uri'
+require 'net/http'
+
+def wget(addr, out)
+  uri = URI.parse(addr)
+  Net::HTTP.start(uri.host, uri.port) do |http|
+    case http.head(uri.path)
+    when Net::HTTPSuccess
+      res = File.open(out, 'w') do |f|
+        http.get(uri.path) { |chunk| f.write chunk }
+      end
+      case res
+      when Net::HTTPSuccess then true
+      else false
+      end
+    else false
+    end
+  end
+end
 
 # FIXME monkey patch for icalendar 1.1.0
 module Icalendar
@@ -63,7 +82,7 @@ icss = icss.map { |fn|
     FileUtils.mkdir_p(CACHEDIR)
     d = CACHEDIR + '/' + Digest::MD5.hexdigest(fn)
     expire = File.exist?(d) && (File.mtime(d).to_i + 10 * 60) # 10 min
-    `wget -q -O #{d} #{fn}` if !expire || Time.now.to_i > expire
+    wget(fn, d) if !expire || Time.now.to_i > expire
     d
   else
     HOME + '/' + fn
